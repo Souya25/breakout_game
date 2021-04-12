@@ -7,13 +7,19 @@ import random
 
 #定数を定義
 RADIUS = 10
-FRAME_LOWER = 50
-FRAME_UPPER = 550
+FRAME_LOWER = 550
+FRAME_UPPER = 50
 FRAME_LEFT = 200
 FRAME_RIGHT = 600
 FPS = 30
 TIME_WAIT = 1000//FPS
 INI_POSE = [400 , 200]
+ROWS = 10
+COLUMNS = 5
+BLOCK_WIDTH = 36
+BLOCK_HEIGHT = 24
+X_GAP = (FRAME_RIGHT - FRAME_LEFT - (BLOCK_WIDTH * ROWS)) // (ROWS + 1)
+Y_GAP = 5
 
 def x_collision_detection( x, pre_x):
     if x + RADIUS >= FRAME_RIGHT or x - RADIUS <= FRAME_LEFT:
@@ -25,8 +31,8 @@ def x_collision_detection( x, pre_x):
         return 1
 
 def y_collision_detection( y, pre_y):
-    if y - RADIUS <= FRAME_LOWER or y + RADIUS >= FRAME_UPPER:
-        if pre_y - RADIUS <= FRAME_LOWER or pre_y + RADIUS >= FRAME_UPPER:
+    if y + RADIUS >= FRAME_LOWER or y - RADIUS <= FRAME_UPPER:
+        if pre_y + RADIUS >= FRAME_LOWER or pre_y - RADIUS <= FRAME_UPPER:
             return 1
         else:
             return -1
@@ -68,6 +74,13 @@ def main():
         dx  = dx * x_collision_detection( x, pre_x)
         dy  = dy * y_collision_detection( y, pre_y)
                 
+        for j in range(COLUMNS):
+            for i in range(ROWS):
+                screen.fill(( 255, 255, 255), \
+                ( FRAME_LEFT + X_GAP + i * X_GAP + i * BLOCK_WIDTH,\
+                 FRAME_UPPER + Y_GAP + j * Y_GAP + j * BLOCK_HEIGHT,\
+                  BLOCK_WIDTH, BLOCK_HEIGHT))
+
         
         pygame.display.update() # 画面更新
         
