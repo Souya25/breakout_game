@@ -3,7 +3,8 @@ import pygame
 from pygame.locals import *
 import sys
 import random
-
+import numpy as np
+import math
 
 #定数を定義
 RADIUS = 10
@@ -39,7 +40,15 @@ def y_collision_detection( y, pre_y):
     else:
         return 1
 
-
+def block_collision_detection( x_blo, y_blo, x, y, pre_x, pre_y ):
+    points = np.array([[ x_blo, y_bro], \
+                       [x_blo + BLOCK_WIDTH, y_blo], \
+                       [x_blo + BLOCK_WIDTH, y_bro + BLOCK_HEIGHT], \
+                       [x_blo, y_blo, BLOCK_HEIGHT]])
+    
+    #for i in range(4):
+      #  if math.hypot(points[i][0] - x, points[i][1] - y) <= RADIUS
+       #     if math.hypot(points[i][0] - x, points[i][1] - y) >= RADIUS
 def main():
     pygame.init() # 初期化
     screen = pygame.display.set_mode((800, 600)) # ウィンドウサイズの指定
@@ -76,11 +85,12 @@ def main():
                 
         for j in range(COLUMNS):
             for i in range(ROWS):
+                x_block = FRAME_LEFT + X_GAP + i * X_GAP + i * BLOCK_WIDTH
+                y_block = FRAME_UPPER + Y_GAP + j * Y_GAP + j * BLOCK_HEIGHT 
                 screen.fill(( 255, 255, 255), \
-                ( FRAME_LEFT + X_GAP + i * X_GAP + i * BLOCK_WIDTH,\
-                 FRAME_UPPER + Y_GAP + j * Y_GAP + j * BLOCK_HEIGHT,\
+                ( x_block, y_block,\
                   BLOCK_WIDTH, BLOCK_HEIGHT))
-
+                #block_collision_detection(x_block, y_block, x, y, pre_x, pre_y)
         
         pygame.display.update() # 画面更新
         
