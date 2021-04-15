@@ -12,10 +12,10 @@ FRAME_LOWER = 550
 FRAME_UPPER = 50
 FRAME_LEFT = 200
 FRAME_RIGHT = 600
-FPS = 30
+FPS = 100
 TIME_WAIT = 1000//FPS
 INI_POSE = [400 , 200]
-ROWS = 10
+ROWS = 4
 COLUMNS = 5
 BLOCK_WIDTH = 36
 BLOCK_HEIGHT = 24
@@ -40,12 +40,64 @@ def y_collision_detection( y, pre_y):
     else:
         return 1
 
-def block_collision_detection( x_blo, y_blo, x, y, pre_x, pre_y ):
-    points = np.array([[ x_blo, y_bro], \
+def x_block_collision_detection( x_blo, y_blo,  x, y, pre_x ):
+    points = np.array([[x_blo, y_blo], \
                        [x_blo + BLOCK_WIDTH, y_blo], \
-                       [x_blo + BLOCK_WIDTH, y_bro + BLOCK_HEIGHT], \
+                       [x_blo + BLOCK_WIDTH, y_blo + BLOCK_HEIGHT], \
                        [x_blo, y_blo, BLOCK_HEIGHT]])
-    
+    if points[0][1] <= y and y <= points[2][1]:
+        if points[0][0] <= x + RADIUS and x + RADIUS <= points[1][0]:
+            if points[0][0] <= pre_x + RADIUS and pre_x + RADIUS <= points[1][0]:
+                return 1
+            else :
+                return -1
+        elif points[0][0] <= x - RADIUS and x - RADIUS <= points[1][0]:
+            if points[0][0] <= pre_x - RADIUS and pre_x - RADIUS <= points[1][0]:
+                return 1
+            else:
+                return -1
+        else:
+            return 1
+    else:
+        return 1
+
+
+def y_block_collision_detection( x_blo, y_blo, x,  y, pre_x, pre_y ):
+    points = np.array([[x_blo, y_blo], \
+                       [x_blo + BLOCK_WIDTH, y_blo], \
+                       [x_blo + BLOCK_WIDTH, y_blo + BLOCK_HEIGHT], \
+                       [x_blo, y_blo, BLOCK_HEIGHT]])
+    if points[0][0] <= x and x <= points[1][0]:
+        if points[0][1] <= y + RADIUS and y + RADIUS <= points[2][1]:
+            if points[0][1] <= pre_y + RADIUS and pre_y + RADIUS <= points[2][1]:
+                return 1
+            else :
+                return -1
+        elif points[0][1] <= y - RADIUS and y - RADIUS <= points[2][1]:
+            if points[0][1] <= pre_y - RADIUS and pre_y - RADIUS <= points[2][1]:
+                return 1
+            else:
+                return -1
+        else:
+            return 1
+    if math.hypot(points[0][0] - x, points[0][1] - y) <= RADIUS \
+        or math.hypot(points[1][0] - x, points[1][1] - y) <= RADIUS\
+        or math.hypot(points[2][0] - x, points[2][1] - y) <= RADIUS\
+        or math.hypot(points[3][0] - x, points[3][1] - y) <= RADIUS:
+        print("tokido")
+        return -1
+        """
+        if math.hypot(points[0][0] - pre_x, points[0][1] - pre_y) <= RADIUS \
+            or math.hypot(points[1][0] - pre_x, points[1][1] - pre_y) <= RADIUS\
+            or math.hypot(points[2][0] - pre_x, points[2][1] - pre_y) <= RADIUS\
+            or math.hypot(points[3][0] - pre_x, points[3][1] - pre_y) <= RADIUS:
+            return 1
+            
+        else:
+            return -1
+            """
+    else:
+        return 1
     #for i in range(4):
       #  if math.hypot(points[i][0] - x, points[i][1] - y) <= RADIUS
        #     if math.hypot(points[i][0] - x, points[i][1] - y) >= RADIUS
@@ -80,8 +132,6 @@ def main():
         y = y + dy * TIME_WAIT // 1000
         
          
-        dx  = dx * x_collision_detection( x, pre_x)
-        dy  = dy * y_collision_detection( y, pre_y)
                 
         for j in range(COLUMNS):
             for i in range(ROWS):
@@ -90,8 +140,13 @@ def main():
                 screen.fill(( 255, 255, 255), \
                 ( x_block, y_block,\
                   BLOCK_WIDTH, BLOCK_HEIGHT))
-                #block_collision_detection(x_block, y_block, x, y, pre_x, pre_y)
+                dx = dx * x_block_collision_detection(x_block, y_block, x, y,  pre_x)
+                dy = dy * y_block_collision_detection(x_block,  y_block, x, y, pre_x, pre_y)
         
+        
+        dx  = dx * x_collision_detection( x, pre_x)
+        dy  = dy * y_collision_detection( y, pre_y)
+                
         pygame.display.update() # 画面更新
         
         for event in pygame.event.get(): # 終了処理
