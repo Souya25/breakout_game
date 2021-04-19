@@ -22,6 +22,7 @@ BLOCK_HEIGHT = 24
 X_GAP = (FRAME_RIGHT - FRAME_LEFT - (BLOCK_WIDTH * ROWS)) // (ROWS + 1)
 Y_GAP = 5
 
+
 def x_collision_detection( x, pre_x):
     if x + RADIUS >= FRAME_RIGHT or x - RADIUS <= FRAME_LEFT:
         if pre_x + RADIUS >= FRAME_RIGHT or pre_x - RADIUS <= FRAME_LEFT:
@@ -105,12 +106,16 @@ def main():
     pygame.init() # 初期化
     screen = pygame.display.set_mode((800, 600)) # ウィンドウサイズの指定
     pygame.display.set_caption("Pygame Test") # ウィンドウの上の方に出てくるアレの指定
-
+    
+    #変数
     x = INI_POSE[0]
     y = INI_POSE[1]
     dx = 100
     dy = 200
-    
+    invisible = np.zeros((COLUMNS, ROWS)) 
+    print(invisible) 
+
+
     while(True):
         screen.fill(( 0, 0, 0)) # 背景色の指定。RGBだと思う
         
@@ -137,12 +142,20 @@ def main():
             for i in range(ROWS):
                 x_block = FRAME_LEFT + X_GAP + i * X_GAP + i * BLOCK_WIDTH
                 y_block = FRAME_UPPER + Y_GAP + j * Y_GAP + j * BLOCK_HEIGHT 
-                screen.fill(( 255, 255, 255), \
-                ( x_block, y_block,\
-                  BLOCK_WIDTH, BLOCK_HEIGHT))
-                dx = dx * x_block_collision_detection(x_block, y_block, x, y,  pre_x)
-                dy = dy * y_block_collision_detection(x_block,  y_block, x, y, pre_x, pre_y)
-        
+                if invisible[j][i] == 0:
+                    screen.fill(( 255, 255, 255), \
+                        ( x_block, y_block,\
+                        BLOCK_WIDTH, BLOCK_HEIGHT))
+                    x_col = x_block_collision_detection(x_block, y_block, x, y,  pre_x)
+                    y_col = y_block_collision_detection(x_block,  y_block, x, y, pre_x, pre_y)
+                    dx = dx * x_col
+                    dy = dy * y_col
+                    
+                    if x_col == -1 or y_col == -1:
+                        invisible[j][i] = 1 
+                        screen.fill(( 0, 0, 0), \
+                            ( x_block, y_block,\
+                            BLOCK_WIDTH, BLOCK_HEIGHT))
         
         dx  = dx * x_collision_detection( x, pre_x)
         dy  = dy * y_collision_detection( y, pre_y)
