@@ -22,8 +22,9 @@ BLOCK_WIDTH = 36
 BLOCK_HEIGHT = 24
 X_GAP = (FRAME_RIGHT - FRAME_LEFT - (BLOCK_WIDTH * ROWS)) // (ROWS + 1)
 Y_GAP = 5
-BAR_POS = np.array([300, 540])
-BAR_SIZE = np.array([100, 5])
+
+INI_BAR_POS = np.array([300, 540])
+INI_BAR_SIZE = np.array([100, 5])
 
 
 def x_collision_detection( x, pre_x):
@@ -133,7 +134,7 @@ def main():
             ( FRAME_RIGHT, FRAME_LOWER), ( FRAME_LEFT,FRAME_LOWER)))        
         
         #バーを表示
-        screen.fill(( 0, 255, 0), ( BAR_POS[0], BAR_POS[1], BAR_SIZE[0], BAR_SIZE[1]))
+        screen.fill(( 0, 255, 0), ( INI_BAR_POS[0], INI_BAR_POS[1], INI_BAR_SIZE[0], INI_BAR_SIZE[1]))
         
 
         #ボールを表示
