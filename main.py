@@ -16,12 +16,14 @@ FRAME_RIGHT = 600
 FPS = 100
 TIME_WAIT = 1000//FPS
 INI_POSE = [400 , 200]
-ROWS = 4
+ROWS = 10
 COLUMNS = 5
 BLOCK_WIDTH = 36
 BLOCK_HEIGHT = 24
 X_GAP = (FRAME_RIGHT - FRAME_LEFT - (BLOCK_WIDTH * ROWS)) // (ROWS + 1)
 Y_GAP = 5
+BAR_POS = np.array([300, 540])
+BAR_SIZE = np.array([100, 5])
 
 
 def x_collision_detection( x, pre_x):
@@ -100,9 +102,12 @@ def y_block_collision_detection( x_blo, y_blo, x,  y, pre_x, pre_y ):
             """
     else:
         return 1
+
     #for i in range(4):
       #  if math.hypot(points[i][0] - x, points[i][1] - y) <= RADIUS
        #     if math.hypot(points[i][0] - x, points[i][1] - y) >= RADIUS
+
+
 def main():
     pygame.init() # 初期化
     screen = pygame.display.set_mode((800, 600)) # ウィンドウサイズの指定
@@ -127,16 +132,23 @@ def main():
             ( (FRAME_LEFT, FRAME_UPPER), ( FRAME_RIGHT, FRAME_UPPER),\
             ( FRAME_RIGHT, FRAME_LOWER), ( FRAME_LEFT,FRAME_LOWER)))        
         
+        #バーを表示
+        screen.fill(( 0, 255, 0), ( BAR_POS[0], BAR_POS[1], BAR_SIZE[0], BAR_SIZE[1]))
+        
+
         #ボールを表示
         pygame.draw.circle(screen, ( 255, 0, 0),\
              (x, y), RADIUS)
         
+
         pre_x = x
         pre_y = y
 
         x = x + dx * TIME_WAIT // 1000 
         y = y + dy * TIME_WAIT // 1000
         
+        
+                
          
                 
         for j in range(COLUMNS):
